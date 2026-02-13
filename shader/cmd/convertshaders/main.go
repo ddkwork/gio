@@ -8,7 +8,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -39,7 +38,7 @@ func main() {
 	var work WorkDir
 	cleanup := func() {}
 	if *workdir == "" {
-		tempdir, err := ioutil.TempDir("", "shader-convert")
+		tempdir, err := os.MkdirTemp("", "shader-convert")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to create tempdir: %v\n", err)
 			os.Exit(1)
@@ -63,7 +62,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := ioutil.WriteFile("shaders.go", out.Bytes(), 0644); err != nil {
+	if err := os.WriteFile("shaders.go", out.Bytes(), 0644); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to create shaders: %v\n", err)
 		cleanup()
 		os.Exit(1)
@@ -146,7 +145,6 @@ func (conv *Converter) Run(out io.Writer) error {
 	shaderResults := make([]ShaderResult, len(shaders))
 
 	for i, shaderPath := range shaders {
-		i, shaderPath := i, shaderPath
 
 		switch filepath.Ext(shaderPath) {
 		case ".vert", ".frag":
@@ -469,7 +467,7 @@ func (conv *Converter) ShaderVariant(shaderPath, variant string, src []byte, lan
 }
 
 func (conv *Converter) ComputeShader(shaderPath string) ([]shaderSources, error) {
-	sh, err := ioutil.ReadFile(shaderPath)
+	sh, err := os.ReadFile(shaderPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load shader %q: %w", shaderPath, err)
 	}
@@ -531,11 +529,9 @@ type Workers struct {
 }
 
 func (lg *Workers) Go(fn func()) {
-	lg.running.Add(1)
-	go func() {
-		defer lg.running.Done()
+	lg.running.Go(func() {
 		fn()
-	}()
+	})
 }
 
 func (lg *Workers) Wait() {

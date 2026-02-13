@@ -1,6 +1,7 @@
 package styledtext
 
 import (
+	"cmp"
 	"image"
 
 	"gioui.org/layout"
@@ -8,7 +9,6 @@ import (
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
 	"gioui.org/text"
-	"golang.org/x/exp/constraints"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -107,14 +107,14 @@ func (it *textIterator) processGlyph(g text.Glyph, ok bool) (_ text.Glyph, visib
 
 }
 
-func min[T constraints.Ordered](a, b T) T {
+func min[T cmp.Ordered](a, b T) T {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func max[T constraints.Ordered](a, b T) T {
+func max[T cmp.Ordered](a, b T) T {
 	if a > b {
 		return a
 	}

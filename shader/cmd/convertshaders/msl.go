@@ -4,7 +4,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -99,7 +99,7 @@ func (msl *MSL) compileFor(sdk, minVer, path string) ([]byte, error) {
 		return nil, fmt.Errorf("%s\nfailed to run %v: %w", output, metal.Args, err)
 	}
 
-	compiled, err := ioutil.ReadFile(result)
+	compiled, err := os.ReadFile(result)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read output %q: %w", pathout, err)
 	}

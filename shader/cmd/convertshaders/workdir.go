@@ -4,7 +4,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+
 	"os"
 	"path/filepath"
 	"strings"
@@ -27,7 +27,7 @@ func (wd WorkDir) Path(path ...string) (fullpath string) {
 }
 
 func (wd WorkDir) WriteFile(path string, data []byte) error {
-	err := ioutil.WriteFile(path, data, 0644)
+	err := os.WriteFile(path, data, 0644)
 	if err != nil {
 		return fmt.Errorf("unable to create %v: %w", path, err)
 	}

@@ -198,7 +198,6 @@ func buildIcons(baseDir, icon string, variants []iconVariant) error {
 	}
 	var resizes errgroup.Group
 	for _, v := range variants {
-		v := v
 		resizes.Go(func() (err error) {
 			path := filepath.Join(baseDir, v.path)
 			if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {

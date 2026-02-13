@@ -5,7 +5,8 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
+
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -40,7 +41,7 @@ func (glsl *GLSLValidator) Convert(path, variant string, lang string, input []by
 		return nil, fmt.Errorf("%s\nfailed to run %v: %w", out, cmd.Args, err)
 	}
 
-	compiled, err := ioutil.ReadFile(pathout)
+	compiled, err := os.ReadFile(pathout)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read output %q: %w", pathout, err)
 	}
