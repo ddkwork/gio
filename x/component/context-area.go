@@ -20,8 +20,12 @@ import (
 // widget is overlaid using an op.DeferOp. The contextual widget
 // can be dismissed by primary-clicking within or outside of it.
 type ContextArea struct {
-	lastUpdate    time.Time
-	position      f32.Point
+	lastUpdate time.Time
+	position   f32.Point
+	// absolutePosition is the click position in window coordinates
+	absolutePosition f32.Point
+	// transform is the transformation matrix at event time
+	transform     f32.Affine2D
 	dims          D
 	active        bool
 	startedActive bool
@@ -92,6 +96,9 @@ func (r *ContextArea) Update(gtx C) {
 			r.justActivated = true
 			if !r.AbsolutePosition {
 				r.position = e.Position
+				// Store the absolute position and transform
+				r.absolutePosition = e.AbsolutePosition()
+				r.transform = e.Transform
 			}
 		}
 	}
@@ -153,30 +160,32 @@ func (r *ContextArea) Layout(gtx C, w layout.Widget) D {
 	}
 
 	if r.active {
-		if int(r.position.X)+r.dims.Size.X > dims.Size.X {
-			if newX := int(r.position.X) - r.dims.Size.X; newX < 0 {
-				switch r.PositionHint {
-				case layout.E, layout.NE, layout.SE:
-					r.position.X = float32(dims.Size.X - r.dims.Size.X)
-				case layout.W, layout.NW, layout.SW:
-					r.position.X = 0
-				}
-			} else {
-				r.position.X = float32(newX)
-			}
+		// Use window coordinates for boundary checking
+		windowSize := gtx.WindowSize
+		menuWidth := r.dims.Size.X
+		menuHeight := r.dims.Size.Y
+
+		// Calculate menu position in window coordinates
+		absPosX := int(math.Round(float64(r.absolutePosition.X)))
+		absPosY := int(math.Round(float64(r.absolutePosition.Y)))
+
+		// Adjust horizontal position if menu would overflow window right edge
+		if absPosX+menuWidth > windowSize.X {
+			absPosX = max(
+				// If still negative, clamp to left edge
+				absPosX-menuWidth, 0)
 		}
-		if int(r.position.Y)+r.dims.Size.Y > dims.Size.Y {
-			if newY := int(r.position.Y) - r.dims.Size.Y; newY < 0 {
-				switch r.PositionHint {
-				case layout.S, layout.SE, layout.SW:
-					r.position.Y = float32(dims.Size.Y - r.dims.Size.Y)
-				case layout.N, layout.NE, layout.NW:
-					r.position.Y = 0
-				}
-			} else {
-				r.position.Y = float32(newY)
-			}
+
+		// Adjust vertical position if menu would overflow window bottom edge
+		if absPosY+menuHeight > windowSize.Y {
+			absPosY = max(
+				// If still negative, clamp to top edge
+				absPosY-menuHeight, 0)
 		}
+
+		// Use the saved transform to convert window coordinates back to local coordinates
+		localPos := r.transform.Invert().Transform(f32.Pt(float32(absPosX), float32(absPosY)))
+
 		// Lay out a transparent scrim to block input to things beneath the
 		// contextual widget.
 		suppressionScrim := func() op.CallOp {
@@ -190,9 +199,10 @@ func (r *ContextArea) Layout(gtx C, w layout.Widget) D {
 		op.Defer(gtx.Ops, suppressionScrim)
 
 		// Lay out the contextual widget itself.
+		// Convert local position back to integer offset
 		pos := image.Point{
-			X: int(math.Round(float64(r.position.X))),
-			Y: int(math.Round(float64(r.position.Y))),
+			X: int(math.Round(float64(localPos.X))),
+			Y: int(math.Round(float64(localPos.Y))),
 		}
 		macro := op.Record(gtx.Ops)
 		op.Offset(pos).Add(gtx.Ops)
