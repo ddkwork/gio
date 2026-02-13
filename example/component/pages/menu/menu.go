@@ -33,6 +33,8 @@ type Page struct {
 	menuInit                                 bool
 	menuDemoList                             widget.List
 	menuDemoListStates                       []component.ContextArea
+	menuDemoListClickables                   []widget.Clickable
+	selectedItem                             int
 	widget.List
 
 	*page.Router
@@ -157,14 +159,59 @@ func (p *Page) Layout(gtx C, th *material.Theme) D {
 		layout.Flexed(.5, func(gtx C) D {
 			p.menuDemoList.Axis = layout.Vertical
 			return material.List(th, &p.menuDemoList).Layout(gtx, 30, func(gtx C, index int) D {
+				// Ensure we have enough clickables
+				if len(p.menuDemoListClickables) < index+1 {
+					p.menuDemoListClickables = append(p.menuDemoListClickables, widget.Clickable{})
+				}
 				if len(p.menuDemoListStates) < index+1 {
 					p.menuDemoListStates = append(p.menuDemoListStates, component.ContextArea{})
 				}
+
+				clickable := &p.menuDemoListClickables[index]
 				state := &p.menuDemoListStates[index]
+
+				// Handle left click
+				if clickable.Clicked(gtx) {
+					p.selectedItem = index
+				}
+
+				// Handle right click activation (ContextArea will be activated on right-click)
+				if state.Activated() {
+					p.selectedItem = index
+				}
+
 				return layout.Stack{}.Layout(gtx,
 					layout.Stacked(func(gtx C) D {
 						gtx.Constraints.Min.X = gtx.Constraints.Max.X
-						return layout.UniformInset(unit.Dp(8)).Layout(gtx, material.Body1(th, fmt.Sprintf("Item %d", index)).Layout)
+						// Use clickable for click effect
+						return clickable.Layout(gtx, func(gtx C) D {
+							// Draw selection background first (will be covered by content)
+							return layout.Background{}.Layout(gtx,
+								func(gtx C) D {
+									if p.selectedItem == index {
+										bgColor := color.NRGBA{R: 200, G: 200, B: 255, A: 255}
+										paint.FillShape(gtx.Ops, bgColor, clip.Rect{
+											Max: gtx.Constraints.Min,
+										}.Op())
+									}
+									return D{Size: gtx.Constraints.Min}
+								},
+								func(gtx C) D {
+									return layout.UniformInset(unit.Dp(8)).Layout(gtx, func(gtx C) D {
+										return layout.Flex{}.Layout(gtx,
+											layout.Flexed(1, material.Body1(th, fmt.Sprintf("Item %d", index)).Layout),
+											layout.Rigid(func(gtx C) D {
+												// Show selection indicator
+												if p.selectedItem == index {
+													return material.Body2(th, "✓").Layout(gtx)
+												}
+												return D{}
+											}),
+										)
+									})
+								},
+							)
+						})
 					}),
 					layout.Expanded(func(gtx C) D {
 						return state.Layout(gtx, func(gtx C) D {
