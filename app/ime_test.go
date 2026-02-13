@@ -6,9 +6,10 @@
 package app
 
 import (
-	"gioui.org/f32"
 	"testing"
 	"unicode/utf8"
+
+	"gioui.org/f32"
 
 	"gioui.org/font"
 	"gioui.org/font/gofont"

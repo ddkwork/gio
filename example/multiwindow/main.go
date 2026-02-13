@@ -74,7 +74,6 @@ func (a *Application) Wait() {
 func (a *Application) NewWindow(title string, view View, opts ...app.Option) {
 	opts = append(opts, app.Title(title))
 	a.active.Go(func() {
-
 		w := &Window{
 			App:    a,
 			Window: new(app.Window),

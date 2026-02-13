@@ -21,9 +21,7 @@ import (
 	"gioui.org/op"
 )
 
-var (
-	dumpImages = flag.Bool("saveimages", false, "save test images")
-)
+var dumpImages = flag.Bool("saveimages", false, "save test images")
 
 var (
 	red         = f32color.RGBAToNRGBA(colornames.Red)
@@ -197,7 +195,7 @@ func saveImage(t testing.TB, file string, img *image.RGBA) {
 		t.Error(err)
 		return
 	}
-	if err := os.WriteFile(file, buf.Bytes(), 0666); err != nil {
+	if err := os.WriteFile(file, buf.Bytes(), 0o666); err != nil {
 		t.Error(err)
 		return
 	}
