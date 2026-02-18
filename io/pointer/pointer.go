@@ -39,6 +39,14 @@ type Event struct {
 	// Modifiers is the set of active modifiers when
 	// the mouse button was pressed.
 	Modifiers key.Modifiers
+	// Transform is the transformation matrix that converts from local
+	// coordinates to window (global) coordinates.
+	Transform f32.Affine2D
+}
+
+// AbsolutePosition returns the event position in window coordinates.
+func (e Event) AbsolutePosition() f32.Point {
+	return e.Transform.Transform(e.Position)
 }
 
 // PassOp sets the pass-through mode. InputOps added while the pass-through
