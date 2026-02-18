@@ -117,11 +117,13 @@ func NewContext(ops *op.Ops, e FrameEvent) layout.Context {
 	}
 
 	return layout.Context{
-		Ops:         ops,
-		Now:         e.Now,
-		Source:      e.Source,
-		Metric:      e.Metric,
 		Constraints: layout.Exact(size),
+		Metric:      e.Metric,
+		Now:         e.Now,
+		Values:      make(map[string]any),
+		WindowSize:  size,
+		Source:      e.Source,
+		Ops:         ops,
 	}
 }
 
