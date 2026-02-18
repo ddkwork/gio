@@ -1138,7 +1138,7 @@ func processURLEvent(rawurl string) bool {
 		return false
 	}
 
-	for _, scheme := range strings.Split(schemesURI, ",") {
+	for scheme := range strings.SplitSeq(schemesURI, ",") {
 		if strings.EqualFold(scheme, evt.URL.Scheme) {
 			processGlobalEvent(evt)
 			return true
