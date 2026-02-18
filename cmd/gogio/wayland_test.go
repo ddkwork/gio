@@ -119,16 +119,14 @@ func (d *WaylandTestDriver) Start(path string) {
 			}
 		}
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			if err := cmd.Wait(); err != nil && ctx.Err() == nil && !strings.Contains(err.Error(), "interrupt") {
 				// Don't print all stderr, since we use --verbose.
 				// TODO(mvdan): if it's useful, probably filter
 				// errors and show them.
 				d.Error(err)
 			}
-			wg.Done()
-		}()
+		})
 	}
 
 	// Then, start our program on the sway compositor above.
@@ -146,13 +144,11 @@ func (d *WaylandTestDriver) Start(path string) {
 			d.Fatal(err)
 		}
 		d.Cleanup(cancel)
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			if err := cmd.Wait(); err != nil && ctx.Err() == nil {
 				d.Error(err)
 			}
-			wg.Done()
-		}()
+		})
 	}
 
 	// Wait for the gio app to render.

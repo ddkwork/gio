@@ -44,7 +44,7 @@ func (g FlowWrap) Layout(gtx layout.Context, num int, el FlowElement) layout.Dim
 	crossCs := axisCross(g.Axis, gtx.Constraints.Max)
 
 	var els []wrapData
-	for i := 0; i < num; i++ {
+	for i := range num {
 		macro := op.Record(gtx.Ops)
 		dims, okMain, okCross := g.place(gtx, i, el)
 		if i == 0 {
@@ -178,13 +178,6 @@ func (g *Flow) Layout(gtx layout.Context, num int, el FlowElement) layout.Dimens
 		}
 		return layout.Dimensions{Size: axisPoint(g.Axis, mainMax, crossMax)}
 	})
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 func axisPoint(a layout.Axis, main, cross int) image.Point {

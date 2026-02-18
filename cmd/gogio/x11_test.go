@@ -56,13 +56,11 @@ func (d *X11TestDriver) Start(path string) {
 			d.Fatal(err)
 		}
 		d.Cleanup(cancel)
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			if err := cmd.Wait(); err != nil && ctx.Err() == nil {
 				d.Error(err)
 			}
-			wg.Done()
-		}()
+		})
 	}
 
 	// Wait for the gio app to render.
@@ -119,15 +117,13 @@ func (d *X11TestDriver) startServer(wg *sync.WaitGroup, width, height int) {
 		return err
 	})
 
-	wg.Add(1)
-	go func() {
+	wg.Go(func() {
 		if err := cmd.Wait(); err != nil && ctx.Err() == nil {
 			// Print all output and error.
 			io.Copy(os.Stdout, combined)
 			d.Error(err)
 		}
-		wg.Done()
-	}()
+	})
 }
 
 func (d *X11TestDriver) Screenshot() image.Image {

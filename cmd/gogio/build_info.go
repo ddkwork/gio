@@ -157,7 +157,7 @@ func getLdFlags(appID string) string {
 }
 
 func getCommaList(s string) (list []string) {
-	for _, v := range strings.Split(s, ",") {
+	for v := range strings.SplitSeq(s, ",") {
 		if v := strings.TrimSpace(v); v != "" {
 			list = append(list, v)
 		}

@@ -73,9 +73,7 @@ func (a *Application) Wait() {
 // NewWindow creates a new tracked window.
 func (a *Application) NewWindow(title string, view View, opts ...app.Option) {
 	opts = append(opts, app.Title(title))
-	a.active.Add(1)
-	go func() {
-		defer a.active.Done()
+	a.active.Go(func() {
 
 		w := &Window{
 			App:    a,
@@ -83,7 +81,7 @@ func (a *Application) NewWindow(title string, view View, opts ...app.Option) {
 		}
 		w.Window.Option(opts...)
 		view.Run(w)
-	}()
+	})
 }
 
 // Window holds window state.

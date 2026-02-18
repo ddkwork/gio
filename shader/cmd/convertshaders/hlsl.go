@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -68,7 +68,7 @@ func (fxc *FXC) Compile(path, variant string, input []byte, entryPoint string, p
 		return nil, fmt.Errorf("%s\n%sfailed to run %v: %w", output, info, cmd.Args, err)
 	}
 
-	compiled, err := ioutil.ReadFile(result)
+	compiled, err := os.ReadFile(result)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read output %q: %w", pathout, err)
 	}
@@ -110,7 +110,7 @@ func (dxc *DXC) Compile(path, variant string, input []byte, entryPoint string, p
 		return "", fmt.Errorf("%s\nfailed to run %v: %w", output, cmd.Args, err)
 	}
 
-	compiled, err := ioutil.ReadFile(result)
+	compiled, err := os.ReadFile(result)
 	if err != nil {
 		return "", fmt.Errorf("unable to read output %q: %w", pathout, err)
 	}

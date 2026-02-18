@@ -328,13 +328,6 @@ func (p PickerStyle) layoutLeftPane(gtx C) D {
 	return dims
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 func (p PickerStyle) layoutSliders(gtx C) D {
 	return layout.Flex{Axis: layout.Vertical}.Layout(gtx,
 		layout.Rigid(func(gtx C) D {

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Unlicense OR MIT
 
 //go:build !(linux && (arm64 || arm || amd64))
-// +build !linux !arm64,!arm,!amd64
 
 package cpu
 

@@ -207,7 +207,6 @@ func (a *App) fetchContributors() {
 	userErrs := make(chan error, len(cons))
 	avatarErrs := make(chan error, len(cons))
 	for _, con := range cons {
-		con := con
 		avatar := con.GetAvatarURL()
 		if avatar == "" {
 			continue

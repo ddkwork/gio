@@ -1,5 +1,4 @@
 //go:build !js && !windows && !android
-// +build !js,!windows,!android
 
 package theme
 

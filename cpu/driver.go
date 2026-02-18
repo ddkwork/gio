@@ -15,6 +15,7 @@ package cpu
 #include "runtime.h"
 */
 import "C"
+
 import (
 	"unsafe"
 )

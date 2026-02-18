@@ -22,7 +22,7 @@ var (
 )
 
 type result struct {
-	file  interface{}
+	file  any
 	error error
 }
 
