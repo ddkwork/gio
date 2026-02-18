@@ -2,15 +2,16 @@
 
 package explorer
 
-type File struct {
-}
+type File struct{}
 
 func (f *File) Read(b []byte) (n int, err error) {
 	return 0, ErrNotAvailable
 }
+
 func (f *File) Write(b []byte) (n int, err error) {
 	return 0, ErrNotAvailable
 }
+
 func (f *File) Close() error {
 	return ErrNotAvailable
 }

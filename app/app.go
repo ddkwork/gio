@@ -3,14 +3,15 @@
 package app
 
 import (
-	"gioui.org/io/event"
-	"golang.org/x/net/idna"
 	"image"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"gioui.org/io/event"
+	"golang.org/x/net/idna"
 
 	"gioui.org/io/input"
 	"gioui.org/layout"

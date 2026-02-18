@@ -113,7 +113,7 @@ func main() {
 	goFallbackImpl := generateGoFallback(pkg, name, layout)
 
 	syso := fmt.Sprintf("%s_linux_%s.syso", name, *arch)
-	if err := os.WriteFile(syso, obj, 0644); err != nil {
+	if err := os.WriteFile(syso, obj, 0o644); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(2)
 	}
@@ -151,7 +151,7 @@ func main() {
 		{"abi.h", cpu.ABIH},
 	}
 	for _, f := range files {
-		if err := os.WriteFile(f.name, f.content, 0644); err != nil {
+		if err := os.WriteFile(f.name, f.content, 0o644); err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(2)
 		}

@@ -62,7 +62,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := os.WriteFile("shaders.go", out.Bytes(), 0644); err != nil {
+	if err := os.WriteFile("shaders.go", out.Bytes(), 0o644); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to create shaders: %v\n", err)
 		cleanup()
 		os.Exit(1)
@@ -145,7 +145,6 @@ func (conv *Converter) Run(out io.Writer) error {
 	shaderResults := make([]ShaderResult, len(shaders))
 
 	for i, shaderPath := range shaders {
-
 		switch filepath.Ext(shaderPath) {
 		case ".vert", ".frag":
 			workers.Go(func() {

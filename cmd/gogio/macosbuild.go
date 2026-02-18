@@ -122,7 +122,6 @@ func (b *macBuilder) setIcon(path string) (err error) {
 }
 
 func (b *macBuilder) setInfo(buildInfo *buildInfo, name string) {
-
 	manifestSrc := struct {
 		Name    string
 		Bundle  string

@@ -110,7 +110,6 @@ func TestNormPt(t *testing.T) {
 				t.Errorf("in: %v*%v, expected: %v, actual: %v", s.l, s.ptIn, s.ptOut, actual)
 			}
 		})
-
 	}
 }
 

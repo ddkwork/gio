@@ -121,7 +121,6 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	"gioui.org/io/transfer"
 	"image"
 	"image/color"
 	"io"
@@ -136,6 +135,8 @@ import (
 	"time"
 	"unicode/utf16"
 	"unsafe"
+
+	"gioui.org/io/transfer"
 
 	"gioui.org/internal/f32color"
 	"gioui.org/op"
@@ -292,9 +293,7 @@ var mainWindow = newWindowRendezvous()
 
 var mainFuncs = make(chan func(env *C.JNIEnv), 1)
 
-var (
-	dataPath string
-)
+var dataPath string
 
 var (
 	newAndroidVulkanContext func(w *window) (context, error)

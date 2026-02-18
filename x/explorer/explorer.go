@@ -165,9 +165,7 @@ func (e *Explorer) CreateFile(name string) (io.WriteCloser, error) {
 	return e.exportFile(name)
 }
 
-var (
-	DefaultExplorer *Explorer
-)
+var DefaultExplorer *Explorer
 
 // ListenEventsWindow calls Explorer.ListenEvents on DefaultExplorer,
 // and creates a new Explorer, if needed.

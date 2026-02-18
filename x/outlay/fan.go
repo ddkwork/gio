@@ -144,7 +144,6 @@ func (f *Fan) Layout(gtx layout.Context, items ...FanItem) layout.Dimensions {
 	return layout.Dimensions{
 		Size: gtx.Constraints.Max,
 	}
-
 }
 
 func (f *Fan) layoutItem(gtx layout.Context, index int, params fanParams) layout.Dimensions {
