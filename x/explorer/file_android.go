@@ -54,7 +54,6 @@ func newFile(env jni.Env, name string, size int64, stream jni.Object) (*File, er
 	f.getError = jni.GetMethodID(env, f.libClass, "getError", "()Ljava/lang/String;")
 
 	return f, nil
-
 }
 
 func (f *File) Name() string { return f.name }

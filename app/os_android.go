@@ -292,9 +292,7 @@ var mainWindow = newWindowRendezvous()
 
 var mainFuncs = make(chan func(env *C.JNIEnv), 1)
 
-var (
-	dataPath string
-)
+var dataPath string
 
 var (
 	newAndroidVulkanContext func(w *window) (context, error)

@@ -5,9 +5,6 @@ package app
 import (
 	"errors"
 	"fmt"
-	"gioui.org/io/transfer"
-	syscall "golang.org/x/sys/windows"
-	"golang.org/x/sys/windows/registry"
 	"image"
 	"io"
 	"os"
@@ -19,6 +16,10 @@ import (
 	"unicode"
 	"unicode/utf8"
 	"unsafe"
+
+	"gioui.org/io/transfer"
+	syscall "golang.org/x/sys/windows"
+	"golang.org/x/sys/windows/registry"
 
 	"gioui.org/app/internal/windows"
 	"gioui.org/op"
