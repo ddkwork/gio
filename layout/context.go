@@ -3,6 +3,7 @@
 package layout
 
 import (
+	"image"
 	"time"
 
 	"gioui.org/io/input"
@@ -30,8 +31,8 @@ type Context struct {
 
 	// Values is a map of program global data associated with the context.
 	// It is not for use by widgets.
-	Values map[string]any
-
+	Values     map[string]any
+	WindowSize image.Point
 	input.Source
 	*op.Ops
 }
