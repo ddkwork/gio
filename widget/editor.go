@@ -499,6 +499,20 @@ func (e *Editor) command(gtx layout.Context, k key.Event) (EditorEvent, bool) {
 	if k.Modifiers.Contain(key.ModShift) {
 		selAct = selectionExtend
 	}
+	if k.Modifiers.Contain(key.ModCtrl) {
+		switch k.Name {
+		case key.NameLeftArrow:
+			if selAct == selectionClear {
+				e.text.ClearSelection()
+			}
+			e.text.MoveWord(-1*direction, selAct)
+		case key.NameRightArrow:
+			if selAct == selectionClear {
+				e.text.ClearSelection()
+			}
+			e.text.MoveWord(1*direction, selAct)
+		}
+	}
 	if k.Modifiers.Contain(key.ModShortcut) {
 		switch k.Name {
 		// Initiate a paste operation, by requesting the clipboard contents; other
