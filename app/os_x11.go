@@ -567,7 +567,8 @@ func (h *x11EventHandler) handleEvents() bool {
 				ks = key.Release
 			}
 			kevt := (*C.XKeyPressedEvent)(unsafe.Pointer(xev))
-			for _, e := range h.w.xkb.DispatchKey(uint32(kevt.keycode), ks) {
+			_, events := h.w.xkb.DispatchKey(uint32(kevt.keycode), ks)
+			for _, e := range events {
 				if ee, ok := e.(key.EditEvent); ok {
 					// There's no support for IME yet.
 					w.w.EditorInsert(ee.Text)

@@ -1254,7 +1254,8 @@ func gio_onKeyboardKey(data unsafe.Pointer, keyboard *C.struct_wl_keyboard, seri
 	w.resetFling()
 	kc := mapXKBKeycode(uint32(keyCode))
 	ks := mapXKBKeyState(uint32(state))
-	for _, e := range w.disp.xkb.DispatchKey(kc, ks) {
+	_, events := w.disp.xkb.DispatchKey(kc, ks)
+	for _, e := range events {
 		if ee, ok := e.(key.EditEvent); ok {
 			// There's no support for IME yet.
 			w.w.EditorInsert(ee.Text)
@@ -1349,7 +1350,8 @@ func (r *repeatState) Repeat(d *wlDisplay) {
 		if r.last+delay > now {
 			break
 		}
-		for _, e := range d.xkb.DispatchKey(r.key, key.Press) {
+		_, events := d.xkb.DispatchKey(r.key, key.Press)
+		for _, e := range events {
 			if ee, ok := e.(key.EditEvent); ok {
 				// There's no support for IME yet.
 				r.win.w.EditorInsert(ee.Text)
