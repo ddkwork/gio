@@ -393,6 +393,7 @@ func (s *shaperImpl) splitByFaces(inputs []shaping.Input, buf []shaping.Input) [
 		split = buf
 	}
 	for _, input := range inputs {
+		s.fontMap.SetScript(input.Script)
 		split = append(split, shaping.SplitByFace(input, s)...)
 	}
 	return split
@@ -415,8 +416,8 @@ func (s *shaperImpl) shapeText(ppem fixed.Int26_6, lc system.Locale, txt []rune)
 	}
 	// Break input on font glyph coverage.
 	inputs := s.splitBidi(input)
-	inputs = s.splitByFaces(inputs, s.splitScratch1[:0])
 	inputs = splitByScript(inputs, lcfg.Direction, s.splitScratch2[:0])
+	inputs = s.splitByFaces(inputs, s.splitScratch1[:0])
 	// Shape all inputs.
 	if needed := len(inputs) - len(s.outScratchBuf); needed > 0 {
 		s.outScratchBuf = slices.Grow(s.outScratchBuf, needed)
