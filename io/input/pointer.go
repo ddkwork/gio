@@ -582,6 +582,15 @@ func (q *pointerQueue) invTransform(areaIdx int, p f32.Point) f32.Point {
 	return q.areas[areaIdx].trans.Invert().Transform(p)
 }
 
+// getTransform returns the accumulated transform for the specified area.
+// The areas[areaIdx].trans is already the accumulated global transform.
+func (q *pointerQueue) getTransform(areaIdx int) f32.Affine2D {
+	if areaIdx == -1 {
+		return f32.AffineId()
+	}
+	return q.areas[areaIdx].trans
+}
+
 func (q *pointerQueue) hit(areaIdx int, p f32.Point) (bool, pointer.Cursor) {
 	c := pointer.CursorDefault
 	for areaIdx != -1 {
@@ -705,6 +714,7 @@ func (q *pointerQueue) Deliver(handlers map[event.Tag]*handler, areaIdx int, e p
 			}
 			scroll, e.Scroll = h.filter.pointer.clampScroll(scroll)
 		}
+		e.Transform = q.getTransform(h.pointer.areaPlusOne - 1)
 		e.Position = q.invTransform(h.pointer.areaPlusOne-1, e.Position)
 		evts = append(evts, taggedEvent{tag: n.tag, event: e})
 		if e.Kind != pointer.Scroll {
@@ -816,6 +826,7 @@ func (q *pointerQueue) deliverEvent(handlers map[event.Tag]*handler, p pointerIn
 			scroll, e.Scroll = f.clampScroll(scroll)
 		}
 		e := e
+		e.Transform = q.getTransform(h.pointer.areaPlusOne - 1)
 		e.Position = q.invTransform(h.pointer.areaPlusOne-1, e.Position)
 		evts = append(evts, taggedEvent{event: e, tag: k})
 	}
@@ -875,6 +886,7 @@ func (q *pointerQueue) deliverEnterLeaveEvents(handlers map[event.Tag]*handler, 
 		e.Kind = pointer.Leave
 
 		if h.filter.pointer.Matches(e) {
+			e.Transform = q.getTransform(h.pointer.areaPlusOne - 1)
 			e.Position = q.invTransform(h.pointer.areaPlusOne-1, e.Position)
 			evts = append(evts, taggedEvent{tag: k, event: e})
 		}
@@ -893,6 +905,7 @@ func (q *pointerQueue) deliverEnterLeaveEvents(handlers map[event.Tag]*handler, 
 		e.Kind = pointer.Enter
 
 		if h.filter.pointer.Matches(e) {
+			e.Transform = q.getTransform(h.pointer.areaPlusOne - 1)
 			e.Position = q.invTransform(h.pointer.areaPlusOne-1, e.Position)
 			evts = append(evts, taggedEvent{tag: k, event: e})
 		}
